@@ -1,135 +1,256 @@
 /*
-Name: OTIM AMOS 
+Name: OTIM AMOS
 Registration Number: 25/U/BIO/01416/PD
 */
 
 #include <stdio.h>
+#include <string.h>
 
 int main(void) {
+
+
     /* Declare variables here */
-    int scores[16];
-    int credits_sem1[8] = {4, 3, 3, 3, 3, 3, 2, 3};
-    int credits_sem2[8] = {4, 3, 3, 3, 3, 3, 3, 3};
-    char *codes_sem1[8] = {"TEMB1101", "TEMB1102", "TEMB1103", "TEMB1104",
-                           "TEMB1105", "TEMB1106", "TEMB1107", "TEMB1108"};
-    char *codes_sem2[8] = {"TEMB1201", "TEMB1202", "TEMB1203", "TEMB1204",
-                           "TEMB1205", "TEMB1206", "TEMB1207", "TEMB1208"};
-    int grade_points[16];
-    char grades[16];
-    int weighted[16];
-    int total_credits_sem1 = 0, total_credits_sem2 = 0;
-    int total_weighted_sem1 = 0, total_weighted_sem2 = 0;
-    float gpa_sem1, gpa_sem2, cgpa;
-    char *classification;
-    int i;
-    
+    float semester_one_gpa = 0;
+    float semester_two_gpa = 0;
+    float cgpa = 0;
+    char cgpa_classification[25];
+
+    // SEMESTER ONE VARIABLES
+
+    char sem1_course_codes[8][10] = {"TEMB1101", "TEMB1102", "TEMB1103", "TEMB1104",
+                                    "TEMB1105", "TEMB1106", "TEMB1107", "TEMB1108"
+                                    };
+    char sem1_course_names[8][40] ={
+                                    "Fundamentals of engineering Math",
+                                    "Biochemistry and Medical Physics",
+                                    "Electrical Engineering Science",
+                                    "Mechanics 1",
+                                    "Computing 1",
+                                    "Mechanical Drawing",
+                                    "Engineering Profession",
+                                    "Functional Anatomy and Physiology 1"
+                                    };
+    int sem1_credit_units[8] = {4, 3, 3, 3, 3, 3, 2, 3};
+    int sum_credit_units1 = 24;
+    int sem1_marks[8]; // = {65, 83, 84, 83, 88, 75, 56, 87};
+    char sem1_grades[8];
+    float sem1_grade_points[8];
+    float sem1_weighted_contribution[8];
+
+    // SEMESTER TWO VARIABLES
+    char sem2_course_codes[8][10] = {"TEMB1201", "TEMB1202", "TEMB1203", "TEMB1204",
+                                    "TEMB1205", "TEMB1206", "TEMB1207", "TEMB1208"
+                                    };
+    char sem2_course_names[8][40] ={
+                                    "Fundamentals of engineering Math",
+                                    "Biochemistry and Medical Physics",
+                                    "Electrical Engineering Science",
+                                    "Mechanics 1",
+                                    "Computing 1",
+                                    "Mechanical Drawing",
+                                    "Engineering Profession",
+                                    "Functional Anatomy and Physiology 2"
+                                    };
+    int sem2_credit_units[8] = {4, 3, 3, 3, 3, 3, 3, 3};
+    int sum_credit_units2 = 25;
+    int sem2_marks[8]; // = {60, 50, 50, 95, 76, 45, 65, 70};
+    char sem2_grades[8];
+    float sem2_grade_points[8];
+    float sem2_weighted_contribution[8];
+
+
+
     /* Read 16 scores */
-    printf("Enter scores for Semester I:\n");
-    for (i = 0; i < 8; i++) {
-        printf("%s: ", codes_sem1[i]);
-        scanf("%d", &scores[i]);
+    /// printf("\n\n------------PLEASE ENTER SEMESTER ONE MARKS-------------");
+    for(int d = 0; d < 8; d++){
+        /// printf("\n%s:\t", sem1_course_codes[d]);
+        scanf(" %d", &sem1_marks[d]);
     }
-    printf("Enter scores for Semester II:\n");
-    for (i = 8; i < 16; i++) {
-        printf("%s: ", codes_sem2[i-8]);
-        scanf("%d", &scores[i]);
+
+    /// printf("\n\n------------PLEASE ENTER SEMESTER TWO MARKS-------------");
+    for(int d = 0; d < 8; d++){
+        /// printf("\n%s:\t", sem2_course_codes[d]);
+        scanf(" %d", &sem2_marks[d]);
     }
-    
+
     /* Validate input */
-    for (i = 0; i < 16; i++) {
-        if (scores[i] < 0 || scores[i] > 100) {
-            printf("Invalid score entered\n");
-            fflush(stdout);
-            return 1;
+
+    // VALIDATION FOR SEM 1
+    for(int x = 0; x < 8; x++){
+        if(sem1_marks[x] < 0 || sem1_marks[x] > 100){
+            printf("\nInvalid score entered");
+            return 0;
+        }
+        else{
+            // printf("\nValidation for %s complete.", sem1_course_codes[x]);
         }
     }
-    
+
+
+    // VALIDATION FOR SEM 2
+    for(int x = 0; x < 8; x++){
+        if(sem2_marks[x] < 0 || sem2_marks[x] > 100){
+            printf("\nInvalid score entered");
+            return 0;
+        }
+        else{
+            // printf("\nValidation for %s  complete.", sem2_course_codes[x]);
+        }
+    }
+
     /* Determine grades and grade points */
-    for (i = 0; i < 16; i++) {
-        if (scores[i] >= 80) {
-            grade_points[i] = 5;
-            grades[i] = 'A';
-        } else if (scores[i] >= 70) {
-            grade_points[i] = 4;
-            grades[i] = 'B';
-        } else if (scores[i] >= 60) {
-            grade_points[i] = 3;
-            grades[i] = 'C';
-        } else if (scores[i] >= 50) {
-            grade_points[i] = 2;
-            grades[i] = 'D';
-        } else {
-            grade_points[i] = 0;
-            grades[i] = 'F';
+
+    // GRADES AND GRADE POINTS FOR SEMESTER ONE
+    for(int g = 0; g < 8; ++g){
+        switch(sem1_marks[g]){
+            case 0 ... 49:
+                {
+                    sem1_grades[g] = 'F';
+                    sem1_grade_points[g] = 0;
+                    break;
+                }
+            case 50 ... 59:
+                {
+                    sem1_grades[g] = 'D';
+                    sem1_grade_points[g] = 2;
+                    break;
+                }
+            case 60 ... 69:
+                {
+                    sem1_grades[g] = 'C';
+                    sem1_grade_points[g] = 3;
+                    break;
+                }
+            case 70 ... 79:
+                {
+                    sem1_grades[g] = 'B';
+                    sem1_grade_points[g] = 4;
+                    break;
+                }
+            case 80 ... 100:
+                {
+                    sem1_grades[g] = 'A';
+                    sem1_grade_points[g] = 5;
+                    break;
+                }
         }
     }
-    
+
+
+
+    // GRADES AND GRADE POINTS FOR SEMESTER TWO
+    for(int g = 0; g < 8; ++g){
+        switch(sem2_marks[g]){
+            case 0 ... 49:
+                {
+                    sem2_grades[g] = 'F';
+                    sem2_grade_points[g] = 0;
+                    break;
+                }
+            case 50 ... 59:
+                {
+                    sem2_grades[g] = 'D';
+                    sem2_grade_points[g] = 2;
+                    break;
+                }
+            case 60 ... 69:
+                {
+                    sem2_grades[g] = 'C';
+                    sem2_grade_points[g] = 3;
+                    break;
+                }
+            case 70 ... 79:
+                {
+                    sem2_grades[g] = 'B';
+                    sem2_grade_points[g] = 4;
+                    break;
+                }
+            case 80 ... 100:
+                {
+                    sem2_grades[g] = 'A';
+                    sem2_grade_points[g] = 5;
+                    break;
+                }
+        }
+    }
+
+//    for(int i = 0; i < 8; i++){
+//        printf("\n%s: %c: %f", sem2_course_codes[i], sem2_grades[i], sem2_grade_points[i]);
+//    }
+
     /* Compute Semester I GPA */
-    for (i = 0; i < 8; i++) {
-        weighted[i] = grade_points[i] * credits_sem1[i];
-        total_credits_sem1 += credits_sem1[i];
-        total_weighted_sem1 += weighted[i];
+    for(int k = 0; k < 8; k++){
+        // NOTE: THIS LOOP CALCULATES GPA AND WEIGHTED CONTRIBUTION
+        // grade_point * credit_unit / sum_credit_units1
+        float igpa = sem1_grade_points[k] * sem1_credit_units[k] / sum_credit_units1;
+        sem1_weighted_contribution[k] = igpa;
+        semester_one_gpa += igpa;
     }
-    gpa_sem1 = (float)total_weighted_sem1 / total_credits_sem1;
-    
+
+
+
     /* Compute Semester II GPA */
-    for (i = 8; i < 16; i++) {
-        weighted[i] = grade_points[i] * credits_sem2[i-8];
-        total_credits_sem2 += credits_sem2[i-8];
-        total_weighted_sem2 += weighted[i];
+    for(int k = 0; k < 8; k++){
+        // NOTE: THIS LOOP CALCULATES GPA AND WEIGHTED CONTRIBUTION SEM 2
+        // grade_point * credit_unit / sum_credit_units2
+        float igpa = sem2_grade_points[k] * sem2_credit_units[k] / sum_credit_units2;
+        sem2_weighted_contribution[k] = igpa;
+        semester_two_gpa += igpa;
     }
-    gpa_sem2 = (float)total_weighted_sem2 / total_credits_sem2;
-    
+
+    //printf("\n %f", semester_two_gpa);
+
     /* Compute CGPA */
-    cgpa = (float)(total_weighted_sem1 + total_weighted_sem2) / (total_credits_sem1 + total_credits_sem2);
-    
+    for(int m = 0; m < 8; m++){
+        cgpa += sem1_grade_points[m] * sem1_credit_units[m];
+        cgpa += sem2_grade_points[m] * sem2_credit_units[m];
+    }
+    cgpa = cgpa / (sum_credit_units1 + sum_credit_units2);
+
     /* Determine classification */
-    if (cgpa >= 4.40)
-        classification = "First Class";
-    else if (cgpa >= 3.60)
-        classification = "Second Class Upper";
-    else if (cgpa >= 2.80)
-        classification = "Second Class Lower";
-    else if (cgpa >= 2.00)
-        classification = "Pass";
+    if(cgpa < 2.00)
+        // cgpa_classification = "Fail";
+        strcpy(cgpa_classification, "Fail");
+    else if(cgpa <= 2.79)
+        // cgpa_classification = "Pass";
+        strcpy(cgpa_classification, "Pass");
+    else if(cgpa <= 3.59)
+        // cgpa_classification = "Second Class Lower";
+        strcpy(cgpa_classification, "Second Class Lower");
+    else if(cgpa <= 4.39)
+        // cgpa_classification = "Second Class Upper";
+        strcpy(cgpa_classification, "Second Class Upper");
+    else if(cgpa <= 5.00)
+        // cgpa_classification = "First Class."
+        strcpy(cgpa_classification, "First Class");
     else
-        classification = "Fail";
-    
+        // cgpa_classification = "Sorry, an error occurred."
+        strcpy(cgpa_classification, "Sorry, error occurred.");
+
     /* Display full academic report */
-    printf("\n==================================================\n");
-    printf("               ACADEMIC REPORT\n");
-    printf("==================================================\n\n");
-    
-    printf("SEMESTER I\n");
-    printf("--------------------------------------------------\n");
-    printf("%-12s %-6s %-5s %-10s %-5s %-10s\n", 
-           "Course", "Score", "Grade", "Grade Point", "Credits", "Weighted");
-    printf("--------------------------------------------------\n");
-    for (i = 0; i < 8; i++) {
-        printf("%-12s %-6d %-5c %-10d %-5d %-10d\n",
-               codes_sem1[i], scores[i], grades[i], grade_points[i],
-               credits_sem1[i], weighted[i]);
+    /// printf("\n\n---------------SUMMARY OF RESULTS-----------------");
+    printf("\nSemester I GPA: %.2f", semester_one_gpa);
+    printf("\nSemester II GPA: %.2f", semester_two_gpa);
+    printf("\nCGPA: %.2f", cgpa);
+    printf("\nClassification: %s", cgpa_classification);
+
+    printf("\n\n---------------SEMESTER ONE-----------------");
+    for(int x = 0; x < 8; x++){
+        printf("\n\t%s  %d  %c  %.2f  %d  %.2f", sem1_course_codes[x],
+                        sem1_marks[x], sem1_grades[x],
+                        sem1_grade_points[x], sem1_credit_units[x],
+                        sem1_weighted_contribution[x]);
     }
-    printf("--------------------------------------------------\n");
-    printf("Semester I GPA: %.2f\n\n", gpa_sem1);
-    
-    printf("SEMESTER II\n");
-    printf("--------------------------------------------------\n");
-    printf("%-12s %-6s %-5s %-10s %-5s %-10s\n",
-           "Course", "Score", "Grade", "Grade Point", "Credits", "Weighted");
-    printf("--------------------------------------------------\n");
-    for (i = 8; i < 16; i++) {
-        printf("%-12s %-6d %-5c %-10d %-5d %-10d\n",
-               codes_sem2[i-8], scores[i], grades[i], grade_points[i],
-               credits_sem2[i-8], weighted[i]);
+
+    printf("\n\n---------------SEMESTER TWO-----------------");
+    for(int x = 0; x < 8; x++){
+        printf("\n\t%s  %d  %c  %.2f  %d  %.2f", sem2_course_codes[x],
+                        sem2_marks[x], sem2_grades[x],
+                        sem2_grade_points[x], sem2_credit_units[x],
+                        sem2_weighted_contribution[x]);
     }
-    printf("--------------------------------------------------\n");
-    printf("Semester II GPA: %.2f\n\n", gpa_sem2);
-    
-    printf("Semester I GPA: %.2f\n", gpa_sem1);
-    printf("Semester II GPA: %.2f\n", gpa_sem2);
-    printf("CGPA: %.2f\n", cgpa);
-    printf("Classification: %s\n", classification);
+
+
 
     return 0;
 }
